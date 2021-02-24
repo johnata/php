@@ -15,15 +15,36 @@ function define_quebra_linha () {
     return $line_break;
 }
 
+// parei no 48
+// https://www.youtube.com/watch?v=LzAFUVSruvQ&list=PLXik_5Br-zO9wODVI0j58VuZXkITMf7gZ&index=48
 
-function buscar_nomes () {
-    yield "nome 01";
-    yield "nome 02";
-    yield from ["nome array 01", "nome array 02", "nome array 03"];
-    yield "nome 03";
+// classe base
+class Animais {
+    public $especie;
+    public $peso;
+
+    function tipoEspecie() {
+        return $this->especie;
+    }
 }
 
-foreach ( buscar_nomes() AS $nome ) {
-    echo $nome;
-    echo "<br />";
+// classe derivada (com herança da classe base)
+class Mamifero extends Animais {
+    // ela vai herdar todas a propriedades (especie e peso) e métodos (tipoEspecie()) da classe Animais
+
+    // podemos adicionar novas proriedades e métodos
+    public $num_pernas;
+    public $tem_pelo;
+
+    function temQuantasPernas() {
+        return $this->num_pernas;
+    }
 }
+
+$mamifero = new Mamifero();
+$mamifero->especie = "Cavalo";
+$mamifero->num_pernas = 4;
+echo $mamifero->temQuantasPernas();
+echo "<br /><pre>";
+print_r($mamifero);
+echo "</pre>";
