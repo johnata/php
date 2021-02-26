@@ -15,36 +15,28 @@ function define_quebra_linha () {
     return $line_break;
 }
 
-// parei no 48
-// https://www.youtube.com/watch?v=LzAFUVSruvQ&list=PLXik_5Br-zO9wODVI0j58VuZXkITMf7gZ&index=48
+// parei no 58
+// https://www.youtube.com/watch?v=LzAFUVSruvQ&list=PLXik_5Br-zO9wODVI0j58VuZXkITMf7gZ&index=58
 
-// classe base
-class Animais {
-    public $especie;
-    public $peso;
+abstract class Forma {
+    public $largura = 100;
+    public $altura = 200;
 
-    function tipoEspecie() {
-        return $this->especie;
+    abstract public function area();
+
+    function getAltura() {
+        return $this->altura;
     }
 }
+// $quadrado = new Forma(); // isto não é permitido de uma classe abstrata
 
-// classe derivada (com herança da classe base)
-class Mamifero extends Animais {
-    // ela vai herdar todas a propriedades (especie e peso) e métodos (tipoEspecie()) da classe Animais
-
-    // podemos adicionar novas proriedades e métodos
-    public $num_pernas;
-    public $tem_pelo;
-
-    function temQuantasPernas() {
-        return $this->num_pernas;
+class Retangulo extends Forma {
+    // tenho que implementar obrigatóriamente o método "area" conforme assinatura da classe abstrata "Forma", se declarar-mos gerará um erro
+    public function area() {
+        return $this->largura * $this->altura;
     }
 }
-
-$mamifero = new Mamifero();
-$mamifero->especie = "Cavalo";
-$mamifero->num_pernas = 4;
-echo $mamifero->temQuantasPernas();
-echo "<br /><pre>";
-print_r($mamifero);
-echo "</pre>";
+$r = new Retangulo();
+echo $r->area();
+echo "<br />";
+echo $r->getAltura();

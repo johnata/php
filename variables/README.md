@@ -60,3 +60,100 @@ for ( $i = 0; $i < 10; $i++ ) {
 echo $b; // a saída será: 100
 echo "<br />";
 ```
+
+#### Constantes
+São variáveis que são declardas com valor atribuido e esse não pode ser alterado durante a execução de um script.
+
+Uma constante é sempre pública, ou seja, sempre visivel.
+
+O nome de uma constante de ser sempre maiuscula, pode utilizat o ```_```, e não se inicia com o ```$``` (como em variáveis normais).
+
+O PHP permite definir uma constante de duas formas:
+* com termo ```const```: é usado para definir constantes no contexto de classes;
+    ```php
+    class Constantes {
+        const PI = 3.14;
+        // Add array nas constantes declaradas com const no PHP 5.6
+        const NOMES = ["Pedro", "João", "Antonio"];
+    }
+
+    $a = new Constantes();
+    // echo $a->PI; // gera erro, pois PI não é um atributo, é uma constante
+    echo $a::PI; // 3.14
+    echo "<br />";
+    echo Constantes::PI; // 3.14
+    echo "<br />";
+
+    echo $a::NOMES[0]; // Pedro
+    echo "<br />";
+    echo Constantes::NOMES[1]; // João
+    echo "<br />";
+    ```
+* com o método ```define```: permite definir constantes globais ou locais, mas não pode ser usada dentro de uma classe;
+    ```php
+    define("APP_NAME", "Nome da minha aplicação");
+    define("MOSTRAR_ERROS", true);
+    
+    // Add array nas constantes com define no PHP 7 
+    define("NOME", ["Pedro", "João", "Antonio"]);
+
+    echo "APP_NAME: ".APP_NAME;
+    echo "<br />";
+
+    
+    echo "NOME[1]: ".NOME[1]; // João
+    echo "<br />";
+
+    if ( MOSTRAR_ERROS ) {
+        echo "mostra o erro";
+        echo "<br />";
+    }
+    ```
+Em versões antigas do PHP é possivel utilizar um terceiro parâmetro para indicar que a constante é insensitive, porem a partir do PHP 7.3 não é mais aceito. 
+
+Podemos validar se uma constante já existe da seguinte forma:
+```php
+if ( !defined("APP_NAME") ) {
+    define("APP_NAME", "Nome da minha aplicação");
+}
+echo "APP_NAME: ".APP_NAME;
+echo "<br />";
+
+defined("APP_NAME2") or define("APP_NAME2", "app 2");
+
+echo "APP_NAME2: ".APP_NAME2;
+echo "<br />";
+```
+
+#### Constantes mágicas
+Existem 8, e são chamadas assim porque seu valor varia automaticamente dependendo de onde são usadas:
+* ```__LINE__```: indica o número da de código no stript;
+* ```__FILE__```: identifica o caminho completo do script;
+* ```__DIR__```: identifica a pasta onde o script esta;
+* ```__FUNCTION__```: indica o nome da função;
+* ```__CLASS__```: indica o nome da classe;
+* ```__METHOD__```: indica o nome do método;
+
+* ```__TRAIT__```: está relacionado com um mecanismo de reutilização de código;
+* ```__NAMESPACE__```: indica o nome do namespace atual;
+```php
+echo "__LINE__: ".__LINE__."<br />";
+echo "__FILE__: ".__FILE__."<br />";
+echo "__DIR__: ".__DIR__."<br />";
+teste();
+$ct = new ClasseTeste();
+$ct->set();
+// echo "__TRAIT__: ".__TRAIT__."<br />";
+echo "__NAMESPACE__: ".__NAMESPACE__."<br />";
+
+function teste() {
+    echo "__FUNCTION__: ".__FUNCTION__."<br />"; // teste
+}
+
+class ClasseTeste {
+    function set() {
+        echo "__CLASS__: ".__CLASS__."<br />";
+        echo "__METHOD__: ".__METHOD__."<br />";
+    }
+}
+```
