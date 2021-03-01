@@ -445,3 +445,35 @@ echo $r->area();
 echo "<br />";
 echo $r->getAltura();
 ```
+#### Traits
+São um grupo de métodos que podem ser inseridos dentro de classes.
+
+Foram adicionada no PHP 5.4 para ajudar na reutilização de código.
+
+Com elas evitamos a utilização de herança de classes.
+
+Os traits são definidos com a expressão ```trait```, seguido pelo nome e por um bloco de código.
+
+As regras para dar nomes são as mesmas das classes.
+
+Para utiliza-la em uma classe apenas usaremos a expressão ```use``` e o nome do grupo de traits.
+```php
+trait MinhasTaits {
+    function falar( $msg ) {
+        echo "eu falo: $msg";
+    }
+    function saltar( $m ) {
+        echo "eu salto: $m metros";
+    }
+}
+
+class Humano {
+    // assim faço a classe utilizar meu grupo de métodos
+    use MinhasTaits;
+}
+
+$r = new Humano();
+echo $r->falar("Eu posso falar");
+echo "<br />";
+echo $r->saltar(3);
+```
