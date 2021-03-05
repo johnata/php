@@ -157,3 +157,160 @@ class ClasseTeste {
     }
 }
 ```
+#### Type declarations
+O PHP não é uma linguagem tipificada, ou seja, as variáveis não são definidas com um tipo específico. Mas podemos tipificar nos parametros e retornos de funções
+```php
+function falar ( array $msg ) {
+    print_r($msg);
+}
+
+// falar("alô"); // var dar erro
+falar(["alô"]); // teremos que passar um array como parâmetro
+
+function conversar ( string $msg ) {
+    echo($msg);
+}
+conversar("alô"); // funciona perfeitamente
+conversar(1); // funciona perfeitamente, pois o PHP converte automaticamente o inteiro para string
+// conversar(["alô"]); // já se passarmos um array dará erro
+```
+
+A declarações de tipos foram adicionadas no PHP 5.1 e acrescentados mais tipos no PHP 5.4, como por exemplo `callable`
+
+Outros tipos (`bool`, `int`, `float` e `string`) foram adicionados no PHP 7 e no PHP 8 foi adicionado o tipo `mixed`.
+
+O tipo `callable` tem que ser uma função, método ou objeto. Podemos utilizar uma função anonima por exemplo.
+
+**CUIDADO**: O PHP faz algumas converções automáticas (inteiro para string)
+```php
+$falar = function($msg) { echo "A minha mensagem é: $msg"; };
+
+function conversar( callable $func, $valor ) {
+    $func($valor);
+}
+
+conversar($falar, "apenas para confirmar a reserva");
+```
+Com retornos de funções:
+```php
+function func_1():array {
+    return [0, 1, 2];
+}
+print_r(func_1());
+
+// aqui irá dar erro, pois espera uma string como retorno e está retornando um array
+// function func_2():string {
+//     return [0, 1, 2];
+// }
+```
+
+No PHP 7.1 passou a ser possivel usar o tipo de  declaração nullable, com isso alem do tipo especificado ela pode receber valor nulo. Para isso basta colocar prefixo `?` antes do tipo de valor esperado (`function escrever( ?string $msg) { echo $msg; }`).
+
+#### Strict types
+O comportamento natural do PHP é tentar converter os tipos declarados:
+```php
+function escrever( string $msg) {
+    echo $msg;
+}
+escrever("olá"); // converte
+echo "<br / >";
+escrever(23); // converte
+
+function somar( int $num_1, int $num_2 ) {
+    echo $num_1 + $num_2;
+}
+somar(2, 8); // converte
+echo "<br / >";
+somar('a', 'b'); // converte, porem dará erro no calculo
+```
+Porem temos forçar que o PHP não tente converter com o `declare(strict_types=1)`, porem ele deve ser declarado no inicio de cada stript:
+```php
+declare(strict_types=1);
+function escrever( string $msg) {
+    echo $msg;
+}
+escrever("olá"); // OK
+echo "<br / >";
+// escrever(23); // ERROR
+
+function somar( int $num_1, int $num_2 ) {
+    echo $num_1 + $num_2;
+}
+somar(2, 8); // OK
+echo "<br / >";
+// somar('a', 'b'); // ERROR
+```
+No PHP 8 foi disponibilizada a possibilidade de definirmos mais de um tipo de variável para o mesmo campo ou retorno de uma função, separando os tipos co o pipe "`|`":
+```php
+declare(strict_types=1);
+function escrever( int|string $msg) {
+    echo $msg;
+}
+escrever("olá"); // OK
+echo "<br / >";
+escrever(23); // OK
+echo "<br / >";
+// escrever([1, 2, 3]); // ERROR
+
+function somar( int|float $v1, int|float $v2):int|float {    
+    // return "teste"; // se tentarmos devolver algo diferente do esperado dará erro
+    return $v1 + $v2;
+}
+echo somar(1.5, 1.5); // OK
+echo "<br / >";
+echo somar(1, 1); // OK
+echo "<br / >";
+// echo somar(1, "1"); // ERROR
+echo "<br / >";
+```
+#### Explicit Cast (Conversão explícita)
+Podemos converter explícitamente os principais tipos de valores: `(string)`, `(int)`, `(float)`, `(array)`, etc.
+> boleano para inteiro:
+```php
+$var_boleana = false;
+// se for mostrar o valor boleano falso, mostrará nulo
+echo "\$var_boleana: ".$var_boleana;
+echo "<br />";
+// assim podemos converter para inteiro para mostrar como 0 (zero)
+echo "(int)\$var_boleana: ".(int)$var_boleana;
+echo "<br />";
+```
+> array para objeto
+```php
+$array_ufs = ["PR", "SC", "RS"];
+$objeto_ufs = (object)$array_ufs;
+
+echo "\$array_ufs:<br /><pre>";
+print_r($array_ufs);
+echo "</pre><br />";
+
+echo "\$objeto_ufs:<br /><pre>";
+print_r($objeto_ufs);
+echo "</pre><br />";
+```
+> string ou int para array ou objeto
+```php
+$nome = "Pedro";
+$array_nomes = (array)$nome;
+$obj_nomes = (object)$nome;
+
+echo "\$array_nomes:<br /><pre>";
+print_r($array_nomes);
+echo "</pre><br />";
+
+echo "\$obj_nomes:<br /><pre>";
+print_r($obj_nomes);
+echo "</pre><br />";
+
+$idade = 20;
+$array_idades = (array)$idade;
+$obj_idades = (object)$idade;
+
+echo "\$array_idades:<br /><pre>";
+print_r($array_idades);
+echo "</pre><br />";
+
+echo "\$obj_idades:<br /><pre>";
+print_r($obj_idades);
+echo "</pre><br />";
+```
